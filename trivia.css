@@ -1,0 +1,8 @@
+#game {
+  width: 300px;
+  margin: auto;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+button.correct { background-color: green; }
+button.incorrect { background-color: red; }
