@@ -80,3 +80,14 @@ button.incorrecta {
   font-style: italic;
   color: #666;
 }
+
+#timer.urgente {
+  color: #d32f2f;
+  font-weight: bold;
+  animation: parpadeo 1s infinite;
+}
+
+@keyframes parpadeo {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}

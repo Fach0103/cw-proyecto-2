@@ -1,7 +1,7 @@
 let currentIndex = 0;
 let totalPreguntas = 0;
 let score = 0;
-let tiempoRestante = 10;
+let tiempoRestante = 20;
 let timerInterval;
 let preguntas = [];
 let nombreJugador = "Invitado"; // Valor por defecto
@@ -50,6 +50,7 @@ function mostrarPregunta() {
   const answersDiv = document.getElementById('answers');
   const progress = document.getElementById('progress');
   const timeElem = document.getElementById('timeLeft');
+  const timerDiv = document.getElementById('timer');
 
   progress.textContent = `Pregunta ${currentIndex + 1} de ${totalPreguntas}`;
   preguntaTexto.innerHTML = decodeHTMLEntities(pregunta.question);
@@ -67,11 +68,20 @@ function mostrarPregunta() {
     answersDiv.appendChild(btn);
   });
 
-  tiempoRestante = 10;
+  tiempoRestante = 20;
   timeElem.textContent = tiempoRestante;
+  timerDiv.classList.remove("urgente");
+
   timerInterval = setInterval(() => {
     tiempoRestante--;
     timeElem.textContent = tiempoRestante;
+
+    if (tiempoRestante <= 5) {
+      timerDiv.classList.add("urgente");
+    } else {
+      timerDiv.classList.remove("urgente");
+    }
+
     if (tiempoRestante <= 0) {
       clearInterval(timerInterval);
       marcarRespuestaCorrecta();
@@ -95,6 +105,7 @@ function validarRespuesta(btn, correcta) {
     marcarRespuestaCorrecta();
   }
 
+  document.getElementById('timer').classList.remove('urgente');
   document.getElementById('nextBtn').disabled = false;
 }
 
@@ -104,6 +115,8 @@ function marcarRespuestaCorrecta() {
       b.classList.add('correcta');
     }
   });
+
+  document.getElementById('timer').classList.remove("urgente");
 }
 
 function bloquearRespuestas() {
@@ -115,9 +128,25 @@ document.getElementById('nextBtn').addEventListener('click', () => {
   if (currentIndex < preguntas.length) {
     mostrarPregunta();
   } else {
+    const respuestasCorrectas = score / 10;
+    const porcentaje = Math.round((respuestasCorrectas / totalPreguntas) * 100);
+    const mensajeFinal = porcentaje >= 80
+      ? "🎉 ¡Excelente!"
+      : porcentaje >= 50
+      ? "💪 Buen intento"
+      : "📚 ¡A practicar más!";
+
     document.getElementById('game').innerHTML = `
       <h2>¡Juego finalizado, ${nombreJugador}!</h2>
-      <p>Puntuación final: ${score}</p>`;
+      <p>Respondiste correctamente ${respuestasCorrectas} de ${totalPreguntas} preguntas.</p>
+      <p>Tu puntuación fue de ${score} puntos (${porcentaje}% de acierto).</p>
+      <p>${mensajeFinal}</p>
+      <button id="restartBtn">🔁 Jugar otra vez</button>
+    `;
+
+    document.getElementById("restartBtn").addEventListener("click", () => {
+      location.reload();
+    });
   }
 });
 
