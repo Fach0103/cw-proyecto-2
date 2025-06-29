@@ -1,8 +1,82 @@
-#game {
-  width: 300px;
-  margin: auto;
-  text-align: center;
-  font-family: Arial, sans-serif;
+/* Estilo general */
+body {
+  background: #f7f7f7;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 20px;
 }
-button.correct { background-color: green; }
-button.incorrect { background-color: red; }
+
+#app {
+  max-width: 400px;
+  margin: auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* Temporizador y progreso */
+#progress {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+#timer {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* Pregunta */
+#questionText {
+  font-size: 1.1em;
+  margin-bottom: 20px;
+}
+
+/* Respuestas */
+.answer-btn {
+  display: block;
+  width: 100%;
+  margin: 6px 0;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #e0e0e0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button.correcta {
+  background-color: #4caf50;
+  color: white;
+}
+
+button.incorrecta {
+  background-color: #f44336;
+  color: white;
+}
+
+#nextBtn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-weight: bold;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#nextBtn:disabled {
+  background-color: #9e9e9e;
+  cursor: not-allowed;
+}
+
+/* Cargando */
+#loading {
+  font-style: italic;
+  color: #666;
+}

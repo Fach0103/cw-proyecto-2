@@ -1,30 +1,63 @@
-<div id="setup">
-  <h2>Configuración del juego</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Trivia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="trivia.css">
+</head>
+<body>
 
-  <label>Nombre del jugador:</label>
-  <input type="text" id="playerName" maxlength="20" required>
+  <main id="app">
 
-  <label>Número de preguntas (5–20):</label>
-  <input type="number" id="numQuestions" min="5" max="20" required>
+    <!-- 🎛️ Panel de configuración -->
+    <form id="setup">
+      <fieldset>
+        <legend><h2>Configuración del juego</h2></legend>
 
-  <label>Dificultad:</label>
-  <select id="difficulty">
-    <option value="easy">Fácil</option>
-    <option value="medium">Medio</option>
-    <option value="hard">Difícil</option>
-  </select>
+        <label for="playerName">Nombre del jugador:</label>
+        <input type="text" id="playerName" maxlength="20" required>
 
-  <label>Categoría:</label>
-  <select id="category">
-    <option value="any">Mixtas</option>
-    <option value="9">Cultura General</option>
-    <option value="18">Informática</option>
-    <option value="23">Historia</option>
-    <option value="22">Geografía</option>
-    <option value="11">Películas</option>
-  </select>
+        <label for="numQuestions">Número de preguntas (5–20):</label>
+        <input type="number" id="numQuestions" min="5" max="20" required>
 
-  <button id="startGame">Comenzar Juego</button>
-</div><div id="loading" style="display: none;">
-  <p>Cargando preguntas...</p>
-</div>
+        <label for="difficulty">Dificultad:</label>
+        <select id="difficulty">
+          <option value="easy">Fácil</option>
+          <option value="medium">Medio</option>
+          <option value="hard">Difícil</option>
+        </select>
+
+        <label for="category">Categoría:</label>
+        <select id="category">
+          <option value="any">Mixtas</option>
+          <option value="9">Cultura General</option>
+          <option value="18">Informática</option>
+          <option value="23">Historia</option>
+          <option value="22">Geografía</option>
+          <option value="11">Películas</option>
+        </select>
+
+        <button type="button" id="startGame">Comenzar Juego</button>
+      </fieldset>
+    </form>
+
+    <!-- 🔄 Indicador de carga -->
+    <div id="loading" style="display: none;">
+      <p>Cargando preguntas...</p>
+    </div>
+
+    <!-- 🧠 Interfaz del juego -->
+    <section id="game" style="display: none;">
+      <h2 id="progress">Pregunta 1 de X</h2>
+      <div id="timer">Tiempo restante: <span id="timeLeft">10</span>s</div>
+      <h3 id="questionText">Cargando pregunta...</h3>
+      <div id="answers"></div>
+      <button id="nextBtn" disabled>Siguiente</button>
+    </section>
+
+  </main>
+
+  <script src="trivia.js"></script>
+</body>
+</html>
