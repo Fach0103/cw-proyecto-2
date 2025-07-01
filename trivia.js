@@ -4,9 +4,12 @@ let score = 0;
 let tiempoRestante = 20;
 let timerInterval;
 let preguntas = [];
-let nombreJugador = "Invitado"; // Valor por defecto
+let nombreJugador = "Invitado";
+let correctCount = 0;
+let wrongCount = 0;
+let tiempoInicio = 0;
 
-// 🔄 Petición asíncrona a la API
+// 🔄 Petición a la API
 async function obtenerPreguntas(apiUrl) {
   const loadingDiv = document.getElementById('loading');
   loadingDiv.style.display = 'block';
@@ -15,7 +18,6 @@ async function obtenerPreguntas(apiUrl) {
   try {
     const response = await fetch(apiUrl);
     if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-
     const data = await response.json();
     loadingDiv.style.display = 'none';
 
@@ -25,20 +27,28 @@ async function obtenerPreguntas(apiUrl) {
 
     return data.results;
   } catch (error) {
-    loadingDiv.innerHTML = `<p>Error al obtener preguntas: ${error.message}</p>`;
+    loadingDiv.innerHTML = `<p>Error: ${error.message}</p>`;
     console.error(error);
     return null;
   }
 }
 
-// 🚀 Juego
+// 🚀 Iniciar juego
 function iniciarPartida(listaPreguntas) {
   preguntas = listaPreguntas;
   totalPreguntas = preguntas.length;
   currentIndex = 0;
   score = 0;
+  correctCount = 0;
+  wrongCount = 0;
+  tiempoInicio = Date.now();
 
-  document.getElementById('game').style.display = 'block';
+  document.getElementById('liveScore').textContent = 0;
+  document.getElementById('correctCount').textContent = 0;
+  document.getElementById('wrongCount').textContent = 0;
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
   mostrarPregunta();
 }
 
@@ -86,6 +96,8 @@ function mostrarPregunta() {
       clearInterval(timerInterval);
       marcarRespuestaCorrecta();
       bloquearRespuestas();
+      wrongCount++;
+      actualizarMarcadores();
       document.getElementById('nextBtn').disabled = false;
     }
   }, 1000);
@@ -100,13 +112,22 @@ function validarRespuesta(btn, correcta) {
   if (correcta) {
     btn.classList.add('correcta');
     score += 10;
+    correctCount++;
   } else {
     btn.classList.add('incorrecta');
     marcarRespuestaCorrecta();
+    wrongCount++;
   }
 
-  document.getElementById('timer').classList.remove('urgente');
+  document.getElementById('timer').classList.remove("urgente");
   document.getElementById('nextBtn').disabled = false;
+  actualizarMarcadores();
+}
+
+function actualizarMarcadores() {
+  document.getElementById('liveScore').textContent = score;
+  document.getElementById('correctCount').textContent = correctCount;
+  document.getElementById('wrongCount').textContent = wrongCount;
 }
 
 function marcarRespuestaCorrecta() {
@@ -115,7 +136,6 @@ function marcarRespuestaCorrecta() {
       b.classList.add('correcta');
     }
   });
-
   document.getElementById('timer').classList.remove("urgente");
 }
 
@@ -123,29 +143,44 @@ function bloquearRespuestas() {
   document.querySelectorAll('.answer-btn').forEach(b => b.disabled = true);
 }
 
-document.getElementById('nextBtn').addEventListener('click', () => {
+document.getElementById('nextBtn').addEventListener('click', async () => {
   currentIndex++;
   if (currentIndex < preguntas.length) {
     mostrarPregunta();
   } else {
-    const respuestasCorrectas = score / 10;
-    const porcentaje = Math.round((respuestasCorrectas / totalPreguntas) * 100);
-    const mensajeFinal = porcentaje >= 80
-      ? "🎉 ¡Excelente!"
-      : porcentaje >= 50
-      ? "💪 Buen intento"
-      : "📚 ¡A practicar más!";
+    const duracion = (Date.now() - tiempoInicio) / 1000;
+    const tiempoPromedio = (duracion / totalPreguntas).toFixed(2);
+    const porcentaje = Math.round((correctCount / totalPreguntas) * 100);
 
     document.getElementById('game').innerHTML = `
-      <h2>¡Juego finalizado, ${nombreJugador}!</h2>
-      <p>Respondiste correctamente ${respuestasCorrectas} de ${totalPreguntas} preguntas.</p>
-      <p>Tu puntuación fue de ${score} puntos (${porcentaje}% de acierto).</p>
-      <p>${mensajeFinal}</p>
-      <button id="restartBtn">🔁 Jugar otra vez</button>
+      <h2>🎉 ¡Juego finalizado, ${nombreJugador}!</h2>
+      <p>Respondiste correctamente ${correctCount} de ${totalPreguntas} preguntas.</p>
+      <p>Puntos totales: ${score}</p>
+      <p>Porcentaje de acierto: ${porcentaje}%</p>
+      <p>⏱️ Tiempo promedio por pregunta: ${tiempoPromedio} segundos</p>
+
+      <div style="margin-top:20px;">
+        <button id="repetirBtn">🔁 Jugar de nuevo (misma config)</button>
+        <button id="reiniciarBtn">⚙️ Nueva configuración</button>
+        <button id="salirBtn">❌ Finalizar</button>
+      </div>
     `;
 
-    document.getElementById("restartBtn").addEventListener("click", () => {
+    document.getElementById("repetirBtn").addEventListener("click", async () => {
+      const apiUrl = construirApiUrl(totalPreguntas, document.getElementById("category").value, document.getElementById("difficulty").value);
+      const nuevasPreguntas = await obtenerPreguntas(apiUrl);
+      if (nuevasPreguntas) iniciarPartida(nuevasPreguntas);
+    });
+
+    document.getElementById("reiniciarBtn").addEventListener("click", () => {
       location.reload();
+    });
+
+    document.getElementById("salirBtn").addEventListener("click", () => {
+      document.getElementById("app").innerHTML = `
+        <h2>¡Gracias por jugar, ${nombreJugador}!</h2>
+        <p>🎮 Esperamos verte pronto otra vez.</p>
+      `;
     });
   }
 });
@@ -162,7 +197,8 @@ function construirApiUrl(cantidad, categoria, dificultad) {
          `&difficulty=${dificultad}&type=multiple`;
 }
 
-document.getElementById("startGame").addEventListener("click", async () => {
+// 🎮 Iniciar juego con botón único
+document.getElementById("startBtn").addEventListener("click", async () => {
   const nombre = document.getElementById("playerName").value.trim();
   const cantidad = parseInt(document.getElementById("numQuestions").value);
   const dificultad = document.getElementById("difficulty").value;
@@ -181,7 +217,8 @@ document.getElementById("startGame").addEventListener("click", async () => {
   nombreJugador = nombre;
   const apiUrl = construirApiUrl(cantidad, categoria, dificultad);
 
-  document.getElementById("setup").style.display = "none";
+  document.getElementById("intro").style.display = "none";
+  document.getElementById("loading").style.display = "block";
 
   const preguntas = await obtenerPreguntas(apiUrl);
   if (preguntas) {
