@@ -21,7 +21,6 @@ body {
   position: relative;
 }
 
-/* 💡 Capa de luces circulares decorativas */
 body::before {
   content: "";
   position: fixed;
@@ -32,7 +31,6 @@ body::before {
   z-index: -1;
 }
 
-/* 🎪 Pantalla de inicio */
 #intro {
   padding: 60px 20px;
 }
@@ -65,7 +63,6 @@ body::before {
   transform: scale(1.05);
 }
 
-/* 🎮 Contenedor principal */
 #app {
   max-width: 500px;
   margin: auto;
@@ -98,7 +95,6 @@ input, select {
   border-radius: 4px;
 }
 
-/* ⏱️ Estado del juego */
 #progress {
   font-size: 1rem;
   font-weight: bold;
@@ -120,7 +116,6 @@ input, select {
   50% { opacity: 0.3; }
 }
 
-/* 🧠 Pregunta */
 #questionText {
   font-size: 0.95rem;
   margin-bottom: 20px;
@@ -129,7 +124,6 @@ input, select {
   background-color: #333;
 }
 
-/* 🎯 Respuestas */
 .answer-btn {
   display: block;
   width: 100%;
@@ -159,7 +153,6 @@ button.incorrecta {
   color: white;
 }
 
-/* 🧩 Botón siguiente */
 #nextBtn {
   margin-top: 20px;
   padding: 10px 20px;
@@ -177,7 +170,6 @@ button.incorrecta {
   cursor: not-allowed;
 }
 
-/* 📊 Estadísticas */
 #stats {
   margin-top: 10px;
   font-size: 0.7rem;
@@ -187,8 +179,17 @@ button.incorrecta {
   color: #fff176;
 }
 
-/* 🔄 Cargando */
 #loading {
   font-style: italic;
   color: #fff;
+}
+
+
+.imagen-final {
+  display: block;
+  max-width: 80%;
+  margin: 25px auto 15px;
+  border: 4px solid #fff176;
+  border-radius: 12px;
+  box-shadow: 0 0 10px #fff176;
 }

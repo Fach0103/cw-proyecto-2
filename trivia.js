@@ -9,7 +9,7 @@ let correctCount = 0;
 let wrongCount = 0;
 let tiempoInicio = 0;
 
-// 🔄 Petición a la API
+// Obtener preguntas desde la API
 async function obtenerPreguntas(apiUrl) {
   const loadingDiv = document.getElementById('loading');
   loadingDiv.style.display = 'block';
@@ -33,7 +33,7 @@ async function obtenerPreguntas(apiUrl) {
   }
 }
 
-// 🚀 Iniciar juego
+// Iniciar la partida
 function iniciarPartida(listaPreguntas) {
   preguntas = listaPreguntas;
   totalPreguntas = preguntas.length;
@@ -49,9 +49,11 @@ function iniciarPartida(listaPreguntas) {
 
   document.getElementById('loading').style.display = 'none';
   document.getElementById('app').style.display = 'block';
+
   mostrarPregunta();
 }
 
+// Mostrar una pregunta
 function mostrarPregunta() {
   if (timerInterval) clearInterval(timerInterval);
 
@@ -105,6 +107,7 @@ function mostrarPregunta() {
   document.getElementById('nextBtn').disabled = true;
 }
 
+// Validar la respuesta elegida
 function validarRespuesta(btn, correcta) {
   clearInterval(timerInterval);
   bloquearRespuestas();
@@ -124,12 +127,14 @@ function validarRespuesta(btn, correcta) {
   actualizarMarcadores();
 }
 
+// Actualizar marcador en pantalla
 function actualizarMarcadores() {
   document.getElementById('liveScore').textContent = score;
   document.getElementById('correctCount').textContent = correctCount;
   document.getElementById('wrongCount').textContent = wrongCount;
 }
 
+// Marcar respuesta correcta al expirar tiempo o errar
 function marcarRespuestaCorrecta() {
   document.querySelectorAll('.answer-btn').forEach(b => {
     if (b.innerHTML === decodeHTMLEntities(preguntas[currentIndex].correct_answer)) {
@@ -139,10 +144,12 @@ function marcarRespuestaCorrecta() {
   document.getElementById('timer').classList.remove("urgente");
 }
 
+// Bloquear opciones luego de responder
 function bloquearRespuestas() {
   document.querySelectorAll('.answer-btn').forEach(b => b.disabled = true);
 }
 
+// Botón Siguiente
 document.getElementById('nextBtn').addEventListener('click', async () => {
   currentIndex++;
   if (currentIndex < preguntas.length) {
@@ -158,7 +165,7 @@ document.getElementById('nextBtn').addEventListener('click', async () => {
       <p>Puntos totales: ${score}</p>
       <p>Porcentaje de acierto: ${porcentaje}%</p>
       <p>⏱️ Tiempo promedio por pregunta: ${tiempoPromedio} segundos</p>
-
+      <img src="imagenfinal.jpg" alt="Celebración" class="imagen-final" />
       <div style="margin-top:20px;">
         <button id="repetirBtn">🔁 Jugar de nuevo (misma config)</button>
         <button id="reiniciarBtn">⚙️ Nueva configuración</button>
@@ -185,19 +192,21 @@ document.getElementById('nextBtn').addEventListener('click', async () => {
   }
 });
 
+// Decodificar texto HTML (&quot;, &amp;, etc.)
 function decodeHTMLEntities(text) {
   const txt = document.createElement('textarea');
   txt.innerHTML = text;
   return txt.value;
 }
 
+// Construir URL de API con parámetros seleccionados
 function construirApiUrl(cantidad, categoria, dificultad) {
   return `https://opentdb.com/api.php?amount=${cantidad}` +
          (categoria !== "any" ? `&category=${categoria}` : "") +
          `&difficulty=${dificultad}&type=multiple`;
 }
 
-// 🎮 Iniciar juego con botón único
+// Botón principal "Comenzar"
 document.getElementById("startBtn").addEventListener("click", async () => {
   const nombre = document.getElementById("playerName").value.trim();
   const cantidad = parseInt(document.getElementById("numQuestions").value);
@@ -225,3 +234,4 @@ document.getElementById("startBtn").addEventListener("click", async () => {
     iniciarPartida(preguntas);
   }
 });
+``

@@ -9,7 +9,6 @@
 </head>
 <body>
 
-  <!-- 🎪 Pantalla de bienvenida -->
   <div id="intro">
     <h1>🎪 El Gran Show de la Trivia 🎟️</h1>
     <p>¡Configura tu juego y presiona el botón para comenzar!</p>
@@ -17,16 +16,20 @@
     <form id="setup">
       <fieldset>
         <legend><h2>Configuración del juego</h2></legend>
+
         <label for="playerName">Nombre del jugador:</label>
         <input type="text" id="playerName" maxlength="20" required />
+
         <label for="numQuestions">Número de preguntas (5–20):</label>
         <input type="number" id="numQuestions" min="5" max="20" required />
+
         <label for="difficulty">Dificultad:</label>
         <select id="difficulty">
           <option value="easy">Fácil</option>
           <option value="medium">Medio</option>
           <option value="hard">Difícil</option>
         </select>
+
         <label for="category">Categoría:</label>
         <select id="category">
           <option value="any">Mixtas</option>
@@ -36,28 +39,30 @@
           <option value="22">Geografía</option>
           <option value="11">Películas</option>
         </select>
+
         <button type="button" id="startBtn">🎮 ¡Comenzar!</button>
       </fieldset>
     </form>
   </div>
 
-  <!-- Cargando -->
   <div id="loading" style="display: none;">
     <p>Cargando preguntas...</p>
   </div>
 
-  <!-- Juego activo -->
   <main id="app" style="display: none;">
     <section id="game">
       <h2 id="progress">Pregunta 1 de X</h2>
       <div id="timer">Tiempo restante: <span id="timeLeft">20</span>s</div>
+
       <div id="stats">
         <p>Puntos: <span id="liveScore">0</span></p>
         <p>Aciertos: <span id="correctCount">0</span></p>
         <p>Errores: <span id="wrongCount">0</span></p>
       </div>
+
       <h3 id="questionText">Cargando pregunta...</h3>
       <div id="answers"></div>
+
       <button id="nextBtn" disabled>Siguiente</button>
     </section>
   </main>
